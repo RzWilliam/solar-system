@@ -3,6 +3,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 
 interface PlanetProps {
+  name: string;
   distance: number;
   size: number;
   texture: string; // Path to the texture image
@@ -13,7 +14,8 @@ interface PlanetProps {
   normalMap?: string; // Optional path to the normal map image
 }
 
-const Planet = ({ 
+const Planet = ({
+  name,
   distance, 
   size, 
   texture, 

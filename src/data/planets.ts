@@ -1,0 +1,51 @@
+const planets = [
+  {
+    name: "Mercury",
+    distance: 5,
+    size: 0.6,
+    texture: "/textures/mercury.png",
+    speed: 1.2,
+    rotationAngle: 0,
+    rotationSpeed: 0.04,
+  },
+  {
+    name: "Venus",
+    distance: 8,
+    size: 1,
+    texture: "/textures/venus.png",
+    speed: 0.9,
+    rotationAngle: Math.PI / 4,
+    rotationSpeed: 0.02,
+  },
+  {
+    name: "Earth",
+    distance: 11,
+    size: 1.2,
+    texture: "/textures/earth.jpg",
+    speed: 1,
+    rotationAngle: Math.PI / 2,
+    rotationSpeed: 0.01,
+    bumpMap: "/bump/earth.jpg",
+    normalMap: "/normal/earth.jpg",
+  },
+  {
+    name: "Mars",
+    distance: 15,
+    size: 0.8,
+    texture: "/textures/mars.png",
+    speed: 0.5,
+    rotationAngle: Math.PI,
+    rotationSpeed: 0.03,
+  },
+  {
+    name: "Jupiter",
+    distance: 20,
+    size: 1.5,
+    texture: "/textures/jupiter.png",
+    speed: 0.3,
+    rotationAngle: Math.PI * 1.5,
+    rotationSpeed: 0.005,
+  },
+];
+
+export default planets;
