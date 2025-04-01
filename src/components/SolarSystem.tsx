@@ -1,24 +1,41 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stars, OrbitControls } from "@react-three/drei";
+import { Stars } from "@react-three/drei";
+import * as THREE from "three";
 import Planet from "./Planet";
 import Sun from "./Sun";
 import OrbitPath from "./OrbitPath";
+import ChaseCamera from "./cameras/ChaseCamera";
+import OrbitCamera from "./cameras/OrbitCamera";
 import planets from "../data/planets";
 
 const SolarSystem = () => {
   const [followedPlanet, setFollowedPlanet] = useState<string | null>(null);
-  const controlsRef = useRef();
+  const [targetPosition, setTargetPosition] = useState(new THREE.Vector3(0, 0, 0));
+  const [cameraMode, setCameraMode] = useState<'orbit' | 'chase'>('orbit');
 
   const handlePlanetClick = useCallback(
     (planetName: string) => {
-      setFollowedPlanet(planetName === followedPlanet ? null : planetName);
+      if (planetName !== followedPlanet) {
+        setFollowedPlanet(planetName);
+        setCameraMode('chase');
+      }
     },
     [followedPlanet]
   );
 
+  const handlePlanetPosition = useCallback((position: THREE.Vector3) => {
+    setTargetPosition(position);
+  }, []);
+
   const resetView = useCallback(() => {
     setFollowedPlanet(null);
+    setTargetPosition(new THREE.Vector3(0, 0, 0));
+    setCameraMode('orbit');
+  }, []);
+
+  const toggleCameraMode = useCallback(() => {
+    setCameraMode(prev => prev === 'orbit' ? 'chase' : 'orbit');
   }, []);
 
   const planetInfo = followedPlanet
@@ -27,8 +44,6 @@ const SolarSystem = () => {
 
   return (
     <div className="relative w-full h-full bg-black overflow-hidden">
-      {/* View Status UI and Planet Info */}
-
       {/* Planet Info Panel */}
       {planetInfo && (
         <div className="absolute top-4 left-4 z-10 flex items-start gap-4">
@@ -39,14 +54,20 @@ const SolarSystem = () => {
                 <span className="font-semibold">Type:</span> {planetInfo.type}
               </p>
               <p className="mt-4">{planetInfo.description}</p>
-              {followedPlanet && (
-                <div
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={toggleCameraMode}
+                  className="px-4 py-2 text-center cursor-pointer bg-gray-800 font-bold text-white rounded hover:bg-gray-700 transition-colors"
+                >
+                  {cameraMode === 'orbit' ? 'Switch to Chase Camera' : 'Switch to Orbit Controls'}
+                </button>
+                <button
                   onClick={resetView}
-                  className="mt-4 px-4 py-2 text-center cursor-pointer bg-gray-800 w-100 font-bold text-white rounded hover:bg-gray-700 transition-colors"
+                  className="px-4 py-2 text-center cursor-pointer bg-gray-800 font-bold text-white rounded hover:bg-gray-700 transition-colors"
                 >
                   Reset View
-                </div>
-              )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -70,6 +91,16 @@ const SolarSystem = () => {
 
         <Sun />
 
+        {/* Cameras */}
+        <ChaseCamera 
+          target={targetPosition} 
+          isActive={followedPlanet !== null && cameraMode === 'chase'} 
+        />
+        <OrbitCamera
+          target={targetPosition}
+          isActive={cameraMode === 'orbit'}
+        />
+
         {/* Orbit Paths */}
         {planets.map((planet) => (
           <OrbitPath key={`orbit-${planet.name}`} distance={planet.distance} />
@@ -82,24 +113,11 @@ const SolarSystem = () => {
             {...planet}
             isFollowed={followedPlanet === planet.name}
             onClick={handlePlanetClick}
+            onPositionUpdate={followedPlanet === planet.name ? handlePlanetPosition : undefined}
           />
         ))}
 
         <Stars radius={100} depth={50} count={5000} factor={5} />
-
-        {/* OrbitControls is only enabled when not following a planet */}
-        {!followedPlanet && (
-          <OrbitControls
-            ref={controlsRef}
-            enabled={!followedPlanet}
-            target={[0, 0, 0]}
-            enablePan={true}
-            enableZoom={true}
-            enableRotate={true}
-            minDistance={5}
-            maxDistance={50}
-          />
-        )}
       </Canvas>
     </div>
   );

@@ -2,7 +2,7 @@ const planets = [
   {
     name: "Mercury",
     distance: 5,
-    size: 0.6,
+    size: 0.4,
     texture: "/textures/mercury.png",
     speed: 0.8,
     rotationAngle: 0,
@@ -10,7 +10,8 @@ const planets = [
     bumpMap: "/bump/mercury.png",
     normalMap: "/normal/mercury.jpg",
     type: "Rocky",
-    description: "Mercury is the closest planet to the Sun and has a very thin atmosphere.",
+    description:
+      "Mercury is the closest planet to the Sun and has a very thin atmosphere.",
   },
   {
     name: "Venus",
@@ -23,7 +24,8 @@ const planets = [
     bumpMap: "/bump/venus.jpg",
     normalMap: "/normal/venus.jpg",
     type: "Rocky",
-    description: "Venus is similar in size to Earth but has a thick, toxic atmosphere.",
+    description:
+      "Venus is similar in size to Earth but has a thick, toxic atmosphere.",
   },
   {
     name: "Earth",
@@ -36,12 +38,13 @@ const planets = [
     bumpMap: "/bump/earth.jpg",
     normalMap: "/normal/earth.jpg",
     type: "Rocky",
-    description: "Earth is the only planet known to support life and has a diverse climate.",
+    description:
+      "Earth is the only planet known to support life and has a diverse climate.",
   },
   {
     name: "Mars",
     distance: 15,
-    size: 0.8,
+    size: 0.6,
     texture: "/textures/mars.jpg",
     speed: 0.35,
     rotationAngle: Math.PI,
@@ -49,51 +52,56 @@ const planets = [
     bumpMap: "/bump/mars.jpg",
     normalMap: "/normal/mars.jpg",
     type: "Rocky",
-    description: "Mars is known as the Red Planet due to its reddish appearance from iron oxide.",
+    description:
+      "Mars is known as the Red Planet due to its reddish appearance from iron oxide.",
   },
   {
     name: "Jupiter",
-    distance: 20,
-    size: 1.8,
+    distance: 25,
+    size: 2.5,
     texture: "/textures/jupiter.jpg",
     speed: 0.25,
     rotationAngle: Math.PI * 1.5,
     rotationSpeed: 0.006,
     type: "Gaseous",
-    description: "Jupiter is the largest planet in the solar system and has a Great Red Spot.",
+    description:
+      "Jupiter is the largest planet in the solar system and has a Great Red Spot.",
   },
   {
     name: "Saturn",
-    distance: 25,
-    size: 1.5,
+    distance: 35,
+    size: 2.2,
     texture: "/textures/saturn.png",
     speed: 0.2,
     rotationAngle: Math.PI * 2,
     rotationSpeed: 0.005,
     type: "Gaseous",
-    description: "Saturn is famous for its stunning ring system made of ice and rock particles.",
+    description:
+      "Saturn is famous for its stunning ring system made of ice and rock particles.",
   },
   {
     name: "Uranus",
-    distance: 30,
-    size: 1.2,
+    distance: 42,
+    size: 1.7,
     texture: "/textures/uranus.jpg",
     speed: 0.15,
     rotationAngle: Math.PI * 2.5,
     rotationSpeed: 0.004,
     type: "Gaseous",
-    description: "Uranus is an ice giant with a unique tilt that causes extreme seasonal changes.",
+    description:
+      "Uranus is an ice giant with a unique tilt that causes extreme seasonal changes.",
   },
   {
     name: "Neptune",
-    distance: 35,
-    size: 1.1,
+    distance: 50,
+    size: 1.6,
     texture: "/textures/neptune.jpg",
     speed: 0.1,
     rotationAngle: Math.PI * 3,
     rotationSpeed: 0.003,
     type: "Gaseous",
-    description: "Neptune is known for its deep blue color and strong winds, the fastest in the solar system.",
+    description:
+      "Neptune is known for its deep blue color and strong winds, the fastest in the solar system.",
   },
 ];
 
