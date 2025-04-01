@@ -1,44 +1,43 @@
 import { useRef, useEffect } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 interface PlanetProps {
   name: string;
   distance: number;
   size: number;
-  texture: string; // Path to the texture image
+  texture: string;
   speed: number;
-  rotationAngle: number; // Initial rotation angle in radians
-  rotationSpeed: number; // Speed of the planet's self-rotation
-  bumpMap?: string; // Optional path to the bump map image
-  normalMap?: string; // Optional path to the normal map image
+  rotationAngle: number;
+  rotationSpeed: number;
+  bumpMap?: string;
+  normalMap?: string;
+  isFollowed?: boolean;
+  onClick: (name: string) => void;
 }
 
 const Planet = ({
   name,
-  distance, 
-  size, 
-  texture, 
-  speed, 
-  rotationAngle, 
-  rotationSpeed, 
-  bumpMap, 
-  normalMap 
+  distance,
+  size,
+  texture,
+  speed,
+  rotationAngle,
+  rotationSpeed,
+  bumpMap,
+  normalMap,
+  isFollowed = false,
+  onClick
 }: PlanetProps) => {
   const ref = useRef<THREE.Mesh>(null);
-
-  // Load the texture using useLoader
+  const { camera } = useThree();
+  
   const planetTexture = useLoader(THREE.TextureLoader, texture);
-  
-  // Load the bump map texture if provided
   const bumpTexture = bumpMap ? useLoader(THREE.TextureLoader, bumpMap) : null;
-  
-  // Load the normal map texture if provided
   const normalTexture = normalMap ? useLoader(THREE.TextureLoader, normalMap) : null;
 
   useEffect(() => {
     if (ref.current) {
-      // Set the initial position based on the rotationAngle
       ref.current.position.x = Math.cos(rotationAngle) * distance;
       ref.current.position.z = Math.sin(rotationAngle) * distance;
     }
@@ -46,24 +45,52 @@ const Planet = ({
 
   useFrame(({ clock }) => {
     if (ref.current) {
-      // Orbit around the sun
-      ref.current.position.x =
-        Math.cos(clock.getElapsedTime() * (speed * 0.1) + rotationAngle) * distance;
-      ref.current.position.z =
-        Math.sin(clock.getElapsedTime() * (speed * 0.1) + rotationAngle) * distance;
+      // Calculate planet position
+      const angle = clock.getElapsedTime() * (speed * 0.1) + rotationAngle;
+      const x = Math.cos(angle) * distance;
+      const z = Math.sin(angle) * distance;
 
-      // Rotate the planet on its axis
+      // Update planet position
+      ref.current.position.x = x;
+      ref.current.position.z = z;
       ref.current.rotation.y += rotationSpeed * 0.1;
+
+      // Update camera position if this planet is being followed
+      if (isFollowed) {
+        // Calculate camera position slightly behind and above the planet
+        const cameraDistance = 5;
+        const cameraHeight = 2;
+        const cameraAngle = angle - Math.PI / 8; // Slightly offset from directly behind
+
+        camera.position.x = x - Math.cos(cameraAngle) * cameraDistance;
+        camera.position.z = z - Math.sin(cameraAngle) * cameraDistance;
+        camera.position.y = cameraHeight;
+
+        // Look at the planet
+        camera.lookAt(new THREE.Vector3(x, 0, z));
+      } else if (!isFollowed && ref.current === document.activeElement) {
+        // Reset camera to default position when unfollowing
+        camera.position.set(0, 5, 20);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+      }
     }
   });
 
   return (
-    <mesh ref={ref} castShadow receiveShadow>
-      <sphereGeometry args={[size, 64, 64]} /> {/* Increased segment count for better detail */}
-      <meshStandardMaterial 
+    <mesh 
+      ref={ref} 
+      castShadow 
+      receiveShadow
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick(name);
+      }}
+    >
+      <sphereGeometry args={[size, 64, 64]} />
+      <meshStandardMaterial
         map={planetTexture}
         bumpMap={bumpTexture}
-        bumpScale={bumpTexture ? 2.0 : 0} // Increased bump scale for visibility
+        bumpScale={bumpTexture ? 2.0 : 0}
         normalMap={normalTexture}
         normalScale={normalTexture ? new THREE.Vector2(1, 1) : new THREE.Vector2(0, 0)}
         roughness={0.8}

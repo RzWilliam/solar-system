@@ -1,26 +1,51 @@
-// SolarSystem.tsx
+import { useState, useCallback, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stars, OrbitControls } from "@react-three/drei"; // Import OrbitControls
+import { Stars, OrbitControls } from "@react-three/drei";
 import Planet from "./Planet";
 import Sun from "./Sun";
-import planets from "../data/planets.ts"; // Import the planets data
+import OrbitPath from "./OrbitPath";
+import planets from "../data/planets";
+import * as THREE from "three";
+
+const DEFAULT_CAMERA_POSITION = new THREE.Vector3(0, 5, 20);
 
 const SolarSystem = () => {
+  const [followedPlanet, setFollowedPlanet] = useState<string | null>(null);
+  const controlsRef = useRef();
+
+  const handlePlanetClick = useCallback(
+    (planetName: string) => {
+      setFollowedPlanet(planetName === followedPlanet ? null : planetName);
+    },
+    [followedPlanet]
+  );
+
+  const resetView = useCallback(() => {
+    setFollowedPlanet(null);
+  }, []);
+
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "black",
-        overflow: "hidden",
-      }}
-    >
+    <div className="relative w-screen h-screen bg-black overflow-hidden">
+      {/* View Status UI */}
+      <div className="absolute bottom-4 left-4 z-10 flex items-center gap-4">
+        <div className="text-white text-lg">
+          Current view: {followedPlanet || "Overview"}
+        </div>
+        {followedPlanet && (
+          <button
+            onClick={resetView}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          >
+            Reset View
+          </button>
+        )}
+      </div>
+
       <Canvas
         camera={{ position: [0, 5, 20], fov: 60 }}
         style={{ width: "100%", height: "100%" }}
       >
         <ambientLight intensity={0.15} />
-        {/* Point light at the Sun's position */}
         <pointLight
           position={[0, 0, 0]}
           intensity={50}
@@ -32,28 +57,38 @@ const SolarSystem = () => {
           shadow-mapSize-height={1024}
         />
 
-        {/* Soleil */}
         <Sun />
 
-        {/* Planètes */}
-        {planets.map((planet, index) => (
+        {/* Orbit Paths */}
+        {planets.map((planet) => (
+          <OrbitPath key={`orbit-${planet.name}`} distance={planet.distance} />
+        ))}
+
+        {/* Planets */}
+        {planets.map((planet) => (
           <Planet
-            key={index}
-            distance={planet.distance}
-            size={planet.size}
-            texture={planet.texture}
-            speed={planet.speed}
-            rotationAngle={planet.rotationAngle}
-            rotationSpeed={planet.rotationSpeed}
-            bumpMap={planet.bumpMap}
-            normalMap={planet.normalMap}
+            key={planet.name}
+            {...planet}
+            isFollowed={followedPlanet === planet.name}
+            onClick={handlePlanetClick}
           />
         ))}
-        
-        {/* Fond étoilé */}
+
         <Stars radius={100} depth={50} count={2500} factor={5} />
-        {/* Contrôles de caméra */}
-        <OrbitControls minDistance={0} />
+
+        {/* OrbitControls is only enabled when not following a planet */}
+        {!followedPlanet && (
+          <OrbitControls
+            ref={controlsRef}
+            enabled={!followedPlanet}
+            target={[0, 0, 0]}
+            enablePan={true}
+            enableZoom={true}
+            enableRotate={true}
+            minDistance={5}
+            maxDistance={50}
+          />
+        )}
       </Canvas>
     </div>
   );
