@@ -5,27 +5,30 @@ import Planet from "./Planet";
 import Sun from "./Sun";
 import OrbitPath from "./OrbitPath";
 import planets from "../data/planets";
-import * as THREE from "three";
 
-const DEFAULT_CAMERA_POSITION = new THREE.Vector3(0, 5, 20);
+interface SolarSystemProps {
+  onPlanetSelect: (planetName: string | null) => void;
+}
 
-const SolarSystem = () => {
+const SolarSystem = ({ onPlanetSelect }: SolarSystemProps) => {
   const [followedPlanet, setFollowedPlanet] = useState<string | null>(null);
   const controlsRef = useRef();
 
   const handlePlanetClick = useCallback(
     (planetName: string) => {
       setFollowedPlanet(planetName === followedPlanet ? null : planetName);
+      onPlanetSelect(planetName);
     },
-    [followedPlanet]
+    [followedPlanet, onPlanetSelect]
   );
 
   const resetView = useCallback(() => {
     setFollowedPlanet(null);
+    onPlanetSelect(null);
   }, []);
 
   return (
-    <div className="relative w-screen h-screen bg-black overflow-hidden">
+    <div className="relative w-full h-full bg-black overflow-hidden">
       {/* View Status UI */}
       <div className="absolute bottom-4 left-4 z-10 flex items-center gap-4">
         <div className="text-white text-lg">
