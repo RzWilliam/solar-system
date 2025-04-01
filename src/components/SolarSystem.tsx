@@ -6,43 +6,51 @@ import Sun from "./Sun";
 import OrbitPath from "./OrbitPath";
 import planets from "../data/planets";
 
-interface SolarSystemProps {
-  onPlanetSelect: (planetName: string | null) => void;
-}
-
-const SolarSystem = ({ onPlanetSelect }: SolarSystemProps) => {
+const SolarSystem = () => {
   const [followedPlanet, setFollowedPlanet] = useState<string | null>(null);
   const controlsRef = useRef();
 
   const handlePlanetClick = useCallback(
     (planetName: string) => {
       setFollowedPlanet(planetName === followedPlanet ? null : planetName);
-      onPlanetSelect(planetName);
     },
-    [followedPlanet, onPlanetSelect]
+    [followedPlanet]
   );
 
   const resetView = useCallback(() => {
     setFollowedPlanet(null);
-    onPlanetSelect(null);
   }, []);
+
+  const planetInfo = followedPlanet
+    ? planets.find((planet) => planet.name === followedPlanet)
+    : null;
 
   return (
     <div className="relative w-full h-full bg-black overflow-hidden">
-      {/* View Status UI */}
-      <div className="absolute bottom-4 left-4 z-10 flex items-center gap-4">
-        <div className="text-white text-lg">
-          Current view: {followedPlanet || "Overview"}
+      {/* View Status UI and Planet Info */}
+
+      {/* Planet Info Panel */}
+      {planetInfo && (
+        <div className="absolute top-4 left-4 z-10 flex items-start gap-4">
+          <div className="w-80 bg-gray-900/80 backdrop-blur-sm text-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-3">{planetInfo.name}</h2>
+            <div className="space-y-4">
+              <p>
+                <span className="font-semibold">Type:</span> {planetInfo.type}
+              </p>
+              <p className="mt-4">{planetInfo.description}</p>
+              {followedPlanet && (
+                <div
+                  onClick={resetView}
+                  className="mt-4 px-4 py-2 text-center cursor-pointer bg-gray-800 w-100 font-bold text-white rounded hover:bg-gray-700 transition-colors"
+                >
+                  Reset View
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        {followedPlanet && (
-          <button
-            onClick={resetView}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Reset View
-          </button>
-        )}
-      </div>
+      )}
 
       <Canvas
         camera={{ position: [0, 5, 20], fov: 60 }}
