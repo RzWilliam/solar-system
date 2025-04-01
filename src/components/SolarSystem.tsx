@@ -85,7 +85,7 @@ const SolarSystem = () => {
           />
         ))}
 
-        <Stars radius={100} depth={50} count={2500} factor={5} />
+        <Stars radius={100} depth={50} count={5000} factor={5} />
 
         {/* OrbitControls is only enabled when not following a planet */}
         {!followedPlanet && (
