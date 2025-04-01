@@ -5,7 +5,7 @@ import planets from './data/planets';
 const App = () => {
   const [selectedPlanet, setSelectedPlanet] = useState<string | null>(null);
 
-  const handlePlanetSelect = (planetName: string) => {
+  const handlePlanetSelect = (planetName: string | null) => {
     setSelectedPlanet(planetName === selectedPlanet ? null : planetName);
   };
 
