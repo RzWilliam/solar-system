@@ -9,6 +9,8 @@ const planets = [
     rotationSpeed: 0.04,
     bumpMap: "/bump/mercury.png",
     normalMap: "/normal/mercury.jpg",
+    type: "rocky",
+    description: "Mercury is the closest planet to the Sun and has a very thin atmosphere.",
   },
   {
     name: "Venus",
@@ -20,6 +22,8 @@ const planets = [
     rotationSpeed: 0.02,
     bumpMap: "/bump/venus.jpg",
     normalMap: "/normal/venus.jpg",
+    type: "rocky",
+    description: "Venus is similar in size to Earth but has a thick, toxic atmosphere.",
   },
   {
     name: "Earth",
@@ -31,6 +35,8 @@ const planets = [
     rotationSpeed: 0.01,
     bumpMap: "/bump/earth.jpg",
     normalMap: "/normal/earth.jpg",
+    type: "rocky",
+    description: "Earth is the only planet known to support life and has a diverse climate.",
   },
   {
     name: "Mars",
@@ -42,6 +48,8 @@ const planets = [
     rotationSpeed: 0.008,
     bumpMap: "/bump/mars.jpg",
     normalMap: "/normal/mars.jpg",
+    type: "rocky",
+    description: "Mars is known as the Red Planet due to its reddish appearance from iron oxide.",
   },
   {
     name: "Jupiter",
@@ -51,6 +59,8 @@ const planets = [
     speed: 0.25,
     rotationAngle: Math.PI * 1.5,
     rotationSpeed: 0.006,
+    type: "gaseous",
+    description: "Jupiter is the largest planet in the solar system and has a Great Red Spot.",
   },
   {
     name: "Saturn",
@@ -60,6 +70,8 @@ const planets = [
     speed: 0.2,
     rotationAngle: Math.PI * 2,
     rotationSpeed: 0.005,
+    type: "gaseous",
+    description: "Saturn is famous for its stunning ring system made of ice and rock particles.",
   },
   {
     name: "Uranus",
@@ -69,6 +81,8 @@ const planets = [
     speed: 0.15,
     rotationAngle: Math.PI * 2.5,
     rotationSpeed: 0.004,
+    type: "gaseous",
+    description: "Uranus is an ice giant with a unique tilt that causes extreme seasonal changes.",
   },
   {
     name: "Neptune",
@@ -78,6 +92,8 @@ const planets = [
     speed: 0.1,
     rotationAngle: Math.PI * 3,
     rotationSpeed: 0.003,
+    type: "gaseous",
+    description: "Neptune is known for its deep blue color and strong winds, the fastest in the solar system.",
   },
 ];
 
