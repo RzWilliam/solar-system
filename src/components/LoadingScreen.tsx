@@ -24,18 +24,11 @@ const LoadingScreen = () => {
   
   useEffect(() => {
     if (!active && smoothProgress >= 99.9) {
-      // Start transition
       setIsTransitioning(true);
       
-      // Wait for transition to complete
       const transitionTimeout = setTimeout(() => {
-        // Add fade out effect
-        const fadeTimeout = setTimeout(() => {
-          setShow(false);
-        }, 1000);
-        
-        return () => clearTimeout(fadeTimeout);
-      }, 500);
+        setShow(false);
+      }, 1500);
       
       return () => clearTimeout(transitionTimeout);
     }
@@ -45,27 +38,34 @@ const LoadingScreen = () => {
   
   return (
     <div 
-      className={`absolute inset-0 flex items-center justify-center bg-black z-50 transition-all duration-1000 ${
-        isTransitioning ? 'opacity-0' : 'opacity-100'
+      className={`fixed inset-0 flex items-center justify-center bg-black z-50 transition-all duration-1000 ease-in-out ${
+        isTransitioning ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
+      aria-hidden={isTransitioning}
     >
       <div className="text-center px-8 w-full max-w-md">
-        <div className={`text-4xl font-bold text-white mb-8 transition-transform duration-500 ${
-          isTransitioning ? 'transform translate-y-10 opacity-0' : ''
-        }`}>
+        <div 
+          className={`text-4xl font-bold text-white mb-8 transition-all duration-1000 ease-in-out ${
+            isTransitioning ? 'transform translate-y-10 opacity-0' : ''
+          }`}
+        >
           Loading Solar System
         </div>
-        <div className={`w-full h-2 bg-gray-800 rounded-full overflow-hidden transition-transform duration-500 ${
-          isTransitioning ? 'transform scale-x-0' : ''
-        }`}>
+        <div 
+          className={`w-full h-2 bg-gray-800 rounded-full overflow-hidden transition-all duration-1000 ease-in-out ${
+            isTransitioning ? 'transform scale-x-0' : ''
+          }`}
+        >
           <div 
-            className="h-full bg-white transition-transform duration-300 ease-out origin-left"
+            className="h-full bg-white transition-all duration-500 ease-out origin-left"
             style={{ transform: `scaleX(${smoothProgress / 100})` }}
           />
         </div>
-        <div className={`text-white mt-4 text-lg transition-transform duration-500 ${
-          isTransitioning ? 'transform -translate-y-10 opacity-0' : ''
-        }`}>
+        <div 
+          className={`text-white mt-4 text-lg transition-all duration-1000 ease-in-out ${
+            isTransitioning ? 'transform -translate-y-10 opacity-0' : ''
+          }`}
+        >
           {Math.round(smoothProgress)}%
         </div>
       </div>
