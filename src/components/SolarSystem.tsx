@@ -107,7 +107,7 @@ const SolarSystem = () => {
             isActive={!isInitialTransition && cameraMode === 'orbit'}
           />
 
-          <Stars radius={100} depth={50} count={5000} factor={5} />
+          <Stars radius={300} depth={50} count={5000} factor={5} />
         </Suspense>
       </Canvas>
     </div>
